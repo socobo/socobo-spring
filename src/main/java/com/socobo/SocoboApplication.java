@@ -9,6 +9,6 @@ public class SocoboApplication {
 
 	public static void main(String[] args) {
 
-		SpringApplication.run(HomeController.class, args);
+		SpringApplication.run(SocoboApplication.class, args);
 	}
 }
