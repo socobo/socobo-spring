@@ -18,13 +18,13 @@ public class User implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_generator")
     private Long id;
 
-    @Column(name = "USERNAME")
+    @Column(name = "USERNAME", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", unique = true, nullable = false)
     private  String password;
 
     protected User(){}
