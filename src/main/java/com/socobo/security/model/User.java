@@ -1,4 +1,4 @@
-package com.socobo.userManagement.model;
+package com.socobo.security.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,10 +12,15 @@ public class User implements Serializable{
 
     private static final long serialVersionUID = -8402474030984374222L;
 
-    @SequenceGenerator(name = "user_seq_generator", allocationSize = 1, initialValue = 1, sequenceName = "user_id_seq")
+    @SequenceGenerator(
+            name = "user_seq_generator",
+            allocationSize = 1, initialValue = 1,
+            sequenceName = "user_id_seq")
 
     @Column(name = "ID")
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_generator")
+    @Id @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_seq_generator")
     private Long id;
 
     @Column(name = "USERNAME", unique = true, nullable = false)

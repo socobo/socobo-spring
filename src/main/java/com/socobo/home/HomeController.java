@@ -1,7 +1,7 @@
 package com.socobo.home;
 
-import com.socobo.userManagement.model.User;
-import com.socobo.userManagement.repository.UserRepository;
+import com.socobo.security.model.User;
+import com.socobo.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;

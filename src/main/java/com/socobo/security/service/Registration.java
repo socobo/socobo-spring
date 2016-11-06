@@ -1,6 +1,6 @@
-package com.socobo.userManagement.service;
+package com.socobo.security.service;
 
-import com.socobo.userManagement.model.User;
+import com.socobo.security.model.User;
 
 /**
  * Created by patrick on 05.11.16.

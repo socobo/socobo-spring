@@ -1,10 +1,13 @@
-package com.socobo.userManagement.service;
+package com.socobo.security.service;
 
-import com.socobo.userManagement.model.User;
-import com.socobo.userManagement.repository.UserRepository;
+import com.socobo.security.exception.RegistrationException;
+import com.socobo.security.model.User;
+import com.socobo.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * Created by patrick on 05.11.16.
@@ -23,7 +26,19 @@ public class RegistrationImpl implements Registration{
 
     @Override
     public User register(User user) {
+        verifyUserDoesntExist(user);
         return userRepository.save(getEncryptedPasswordUser(user));
+    }
+
+    private void verifyUserDoesntExist(User user) {
+        Optional<User> foundUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
+        foundUser.ifPresent((u) -> {
+            throw new RegistrationException("User for username = "
+                    + user.getUsername()
+                    + " or email: "
+                    + user.getEmail()
+                    + " already exists");
+        });
     }
 
     private User getEncryptedPasswordUser(User user) {

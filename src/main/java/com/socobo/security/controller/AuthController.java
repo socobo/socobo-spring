@@ -1,9 +1,8 @@
-package com.socobo.userManagement.controller;
+package com.socobo.security.controller;
 
-import com.socobo.userManagement.model.User;
-import com.socobo.userManagement.repository.UserRepository;
-import com.socobo.userManagement.service.Registration;
-import org.apache.coyote.http11.filters.VoidInputFilter;
+import com.socobo.security.model.User;
+import com.socobo.security.service.Registration;
+
 import static org.springframework.http.HttpStatus.*;
 
 import static org.springframework.http.MediaType.*;
