@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -15,7 +16,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name="SOCOBO_USER")
-@MatchingPasswords
+@MatchingPasswords(message = "{socobo.registration.user.password.mismatch}")
 public class User implements Serializable{
 
     private static final long serialVersionUID = -8402474030984374222L;
@@ -31,26 +32,27 @@ public class User implements Serializable{
             generator = "user_seq_generator")
     private Long id;
 
-    @NotNull
-    @NotEmpty
+    @NotNull(message = "{socobo.registration.user.username.required}")
+    @NotEmpty(message = "{socobo.registration.user.username.required}")
     @Column(name = "USERNAME", unique = true, nullable = false)
     private String username;
 
-    @NotNull
-    @NotEmpty
-    @Email(message = "Email is invalid")
+    @NotNull(message = "{socobo.registration.user.email.required}")
+    @NotEmpty(message = "{socobo.registration.user.email.required}")
+    @Email(message = "{socobo.registration.user.email.format}")
     @Column(name = "EMAIL", unique = true, nullable = false)
     private String email;
 
-    @NotNull
-    @NotEmpty
+    @NotNull(message = "{socobo.registration.user.password.required}")
+    @NotEmpty(message = "{socobo.registration.user.password.required}")
+    @Size(min = 8, message = "{socobo.registration.user.password.length}")
     @Column(name = "PASSWORD", unique = true, nullable = false)
     private String password;
 
     @Transient
     @JsonIgnore
-    @NotNull
-    @NotEmpty
+    @NotNull(message = "{socobo.registration.user.password.confirmation}")
+    @NotEmpty(message = "{socobo.registration.user.password.confirmation}")
     private String repeatedPassword;
 
     protected User(){}
