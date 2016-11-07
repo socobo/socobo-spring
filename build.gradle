@@ -35,4 +35,6 @@ dependencies {
     compile('org.postgresql:postgresql:9.4.1211.jre7')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.mockito:mockito-all:1.9.5')
+
 }

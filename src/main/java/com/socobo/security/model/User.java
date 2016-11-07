@@ -1,6 +1,13 @@
 package com.socobo.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.socobo.security.validation.validationAnnotation.Email;
+import com.socobo.security.validation.validationAnnotation.MatchingPasswords;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -8,6 +15,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name="SOCOBO_USER")
+@MatchingPasswords
 public class User implements Serializable{
 
     private static final long serialVersionUID = -8402474030984374222L;
@@ -23,14 +31,27 @@ public class User implements Serializable{
             generator = "user_seq_generator")
     private Long id;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "USERNAME", unique = true, nullable = false)
     private String username;
 
+    @NotNull
+    @NotEmpty
+    @Email(message = "Email is invalid")
     @Column(name = "EMAIL", unique = true, nullable = false)
     private String email;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "PASSWORD", unique = true, nullable = false)
-    private  String password;
+    private String password;
+
+    @Transient
+    @JsonIgnore
+    @NotNull
+    @NotEmpty
+    private String repeatedPassword;
 
     protected User(){}
 
@@ -70,6 +91,27 @@ public class User implements Serializable{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @JsonIgnore
+    public String getRepeatedPassword() {
+        return repeatedPassword;
+    }
+
+    @JsonProperty
+    public void setRepeatedPassword(String repeatedPassword) {
+        this.repeatedPassword = repeatedPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", repeatedPassword='" + repeatedPassword + '\'' +
+                '}';
     }
 
     //Equals and HashCode were intentionally left out
