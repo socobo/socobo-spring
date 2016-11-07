@@ -33,7 +33,7 @@ public class RegistrationImpl implements Registration{
     private void verifyUserDoesntExist(User user) {
         Optional<User> foundUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
         foundUser.ifPresent((u) -> {
-            throw new RegistrationException("User for username = "
+            throw new RegistrationException("User for username: "
                     + user.getUsername()
                     + " or email: "
                     + user.getEmail()
