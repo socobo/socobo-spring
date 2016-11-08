@@ -1,5 +1,6 @@
 package com.socobo.security.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.socobo.security.validation.validationAnnotation.Email;
@@ -10,6 +11,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 
 /**
  * Created by patrick on 04.11.16.
@@ -46,7 +50,7 @@ public class User implements Serializable{
     @NotNull(message = "{socobo.registration.user.password.required}")
     @NotEmpty(message = "{socobo.registration.user.password.required}")
     @Size(min = 8, message = "{socobo.registration.user.password.length}")
-    @Column(name = "PASSWORD", unique = true, nullable = false)
+    @Column(name = "PASSWORD", nullable = false)
     private String password;
 
     @Transient
@@ -57,8 +61,16 @@ public class User implements Serializable{
 
     @JsonIgnore
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS", unique = true, nullable = false)
+    @Column(name = "STATUS", nullable = false)
     private Status status;
+
+    @Column(name = "CREATED", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
+    @Column(name = "UPDATED", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastUpdated;
 
     protected User(){}
 
@@ -101,6 +113,14 @@ public class User implements Serializable{
         this.password = password;
     }
 
+    public Date getCreated() {
+        return created;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
     @JsonIgnore
     public String getRepeatedPassword() {
         return repeatedPassword;
@@ -119,6 +139,16 @@ public class User implements Serializable{
     @JsonIgnore
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @PrePersist
+    protected void beforeCreation(){
+        this.lastUpdated = this.created = new Date();
+    }
+
+    @PreUpdate
+    protected void beforeUpdate(){
+        this.lastUpdated = new Date();
     }
 
     @Override
