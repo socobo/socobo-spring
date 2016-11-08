@@ -1,6 +1,8 @@
 package com.socobo.security.service;
 
 import com.socobo.security.exception.RegistrationException;
+import com.socobo.security.model.PermissionRole;
+import com.socobo.security.model.Role;
 import com.socobo.security.model.Status;
 import com.socobo.security.model.User;
 import com.socobo.security.repository.UserRepository;
@@ -29,7 +31,6 @@ public class RegistrationImpl implements Registration{
     public User register(User user) {
         verifyUserDoesntExist(user);
         setInaktiv(user);
-        System.out.println("INAKTIVE?: " + user);
         return userRepository.save(getEncryptedPasswordUser(user));
     }
 

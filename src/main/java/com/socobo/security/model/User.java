@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by patrick on 04.11.16.
@@ -72,6 +72,12 @@ public class User implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
+    @ManyToMany
+    @JoinTable(name = "USERS_ROLES",
+                joinColumns = @JoinColumn(name = "USER_ID"),
+                inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+    private Set<Role> roles = new HashSet<>();
+
     protected User(){}
 
     public User(String username, String email, String password, Status status) {
@@ -79,6 +85,24 @@ public class User implements Serializable{
         this.email = email;
         this.password = password;
         this.status = status;
+    }
+
+    public void addRole(Role role){
+        this.roles = new HashSet<>();
+        this.roles.add(role);
+        Collection<User> users = role.getUsers();
+        if(Objects.isNull(role.getUsers())){
+            users = new ArrayList<>();
+        }
+        users.add(this);
+    }
+
+    public void deleteRole(Role role){
+        this.roles.remove(role);
+        Collection<User> users = role.getUsers();
+        if(!Objects.isNull(role.getUsers())){
+            users.remove(this);
+        }
     }
 
     public Long getId() {
@@ -111,6 +135,10 @@ public class User implements Serializable{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return Collections.unmodifiableSet(this.roles);
     }
 
     public Date getCreated() {
@@ -162,5 +190,4 @@ public class User implements Serializable{
                 ", status=" + status +
                 '}';
     }
-//Equals and HashCode were intentionally left out
 }
