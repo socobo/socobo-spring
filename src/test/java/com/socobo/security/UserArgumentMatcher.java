@@ -25,7 +25,8 @@ public class UserArgumentMatcher extends ArgumentMatcher<User>{
         if(
             expectedUser.getUsername().equals(user.getUsername()) &&
             expectedUser.getPassword().equals(user.getPassword()) &&
-            expectedUser.getEmail().equals(user.getEmail()))
+            expectedUser.getEmail().equals(user.getEmail()) &&
+            expectedUser.getStatus().equals(user.getStatus()))
             return true;
         return false;
 

@@ -1,6 +1,7 @@
 package com.socobo.security.service;
 
 import com.socobo.security.exception.RegistrationException;
+import com.socobo.security.model.Status;
 import com.socobo.security.model.User;
 import com.socobo.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,13 @@ public class RegistrationImpl implements Registration{
     @Override
     public User register(User user) {
         verifyUserDoesntExist(user);
+        setInaktiv(user);
+        System.out.println("INAKTIVE?: " + user);
         return userRepository.save(getEncryptedPasswordUser(user));
+    }
+
+    private void setInaktiv(User user) {
+        user.setStatus(Status.INAKTIV);
     }
 
     private void verifyUserDoesntExist(User user) {
@@ -45,6 +52,7 @@ public class RegistrationImpl implements Registration{
         return new User(
                     user.getUsername(),
                     user.getEmail(),
-                    passwordEncoder.encode(user.getPassword()));
+                    passwordEncoder.encode(user.getPassword()),
+                    user.getStatus());
     }
 }

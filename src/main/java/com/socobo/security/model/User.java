@@ -55,12 +55,18 @@ public class User implements Serializable{
     @NotEmpty(message = "{socobo.registration.user.password.confirmation}")
     private String repeatedPassword;
 
+    @JsonIgnore
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS", unique = true, nullable = false)
+    private Status status;
+
     protected User(){}
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String password, Status status) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.status = status;
     }
 
     public Long getId() {
@@ -105,6 +111,16 @@ public class User implements Serializable{
         this.repeatedPassword = repeatedPassword;
     }
 
+    @JsonProperty
+    public Status getStatus() {
+        return status;
+    }
+
+    @JsonIgnore
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -113,8 +129,8 @@ public class User implements Serializable{
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", repeatedPassword='" + repeatedPassword + '\'' +
+                ", status=" + status +
                 '}';
     }
-
-    //Equals and HashCode were intentionally left out
+//Equals and HashCode were intentionally left out
 }

@@ -1,5 +1,6 @@
 package com.socobo.home;
 
+import com.socobo.security.model.Status;
 import com.socobo.security.model.User;
 import com.socobo.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class HomeController {
     @RequestMapping("/")
     public String home() {
 
-        repo.save(new User("testuser", "testemail", "password"));
+        repo.save(new User("testuser", "testemail", "password", Status.AKTIVE));
         return "Hello Socobo-Spring";
     }
 }

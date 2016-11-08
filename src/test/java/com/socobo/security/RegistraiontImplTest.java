@@ -1,9 +1,9 @@
 package com.socobo.security;
 
 import com.socobo.security.exception.RegistrationException;
+import com.socobo.security.model.Status;
 import com.socobo.security.model.User;
 import com.socobo.security.repository.UserRepository;
-import com.socobo.security.service.Registration;
 import com.socobo.security.service.RegistrationImpl;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class RegistraiontImplTest {
 
         verify(userRepository).findByUsernameOrEmail("Joda", "joda@jedimail.com");
         verify(passwordEncoder).encode("lightsaber");
-        User jodaWithEncryptedPw = new User("Joda","joda@jedimail.com","XXXXX");
+        User jodaWithEncryptedPw = getRegisteredUser();
         verify(userRepository).save(argThat(new UserArgumentMatcher(jodaWithEncryptedPw)));
     }
 
@@ -66,7 +66,11 @@ public class RegistraiontImplTest {
     }
 
     private User getTestUser() {
-        return new User("Joda","joda@jedimail.com","lightsaber");
+        return new User("Joda","joda@jedimail.com","lightsaber", Status.AKTIVE);
+    }
+
+    private User getRegisteredUser() {
+        return new User("Joda","joda@jedimail.com","XXXXX", Status.INAKTIV);
     }
 
     private RegistrationImpl getRegistration() {
