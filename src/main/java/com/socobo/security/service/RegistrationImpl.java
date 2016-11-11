@@ -1,9 +1,7 @@
 package com.socobo.security.service;
 
 import com.socobo.security.exception.RegistrationException;
-import com.socobo.security.model.PermissionRole;
 import com.socobo.security.model.Role;
-import com.socobo.security.model.Status;
 import com.socobo.security.model.User;
 import com.socobo.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +27,23 @@ public class RegistrationImpl implements Registration{
 
     @Override
     public User register(User user) {
-        verifyUserDoesntExist(user);
-        setInaktiv(user);
-        return userRepository.save(getEncryptedPasswordUser(user));
+        verifyUserDoesNotExist(user);
+        setUserToInitialState(user);
+        String encryptedPassword = encryptPassword(user.getPassword());
+        user.setPassword(encryptedPassword);
+        return userRepository.save(user);
     }
 
-    private void setInaktiv(User user) {
-        user.setStatus(Status.INAKTIV);
+    private void setUserToInitialState(User user) {
+        user.deactivate();
+        user.addRole(Role.USER);
     }
 
-    private void verifyUserDoesntExist(User user) {
+    public User getUser(String id){
+        return userRepository.findById(id);
+    }
+
+    private void verifyUserDoesNotExist(User user) {
         Optional<User> foundUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
         foundUser.ifPresent((u) -> {
             throw new RegistrationException("User for username: "
@@ -49,11 +54,7 @@ public class RegistrationImpl implements Registration{
         });
     }
 
-    private User getEncryptedPasswordUser(User user) {
-        return new User(
-                    user.getUsername(),
-                    user.getEmail(),
-                    passwordEncoder.encode(user.getPassword()),
-                    user.getStatus());
+    private String encryptPassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }

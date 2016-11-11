@@ -1,5 +1,9 @@
 package com.socobo.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.socobo.shared.persistence.PersistentObject;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -8,46 +12,51 @@ import java.util.Collection;
  */
 @Entity
 @Table(name = "ROLE")
-public class Role {
+public class Role extends PersistentObject{
 
-    private static final Role ADMIN = new Role(PermissionRole.ADMIN);
-    private static final Role USER = new Role(PermissionRole.USER);
+    private enum PermissionRole {
+        USER,
+        ADMIN
+    }
 
-    @SequenceGenerator(
-            name = "role_seq_generator",
-            allocationSize = 1, initialValue = 1,
-            sequenceName = "role_id_seq")
+    public static Role ADMIN = new Role(PermissionRole.ADMIN);
+    public static Role USER = new Role(PermissionRole.USER);
 
-    @Column(name = "ID")
-    @Id @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "role_seq_generator")
-    private Long id;
-
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "ROLE", nullable = false)
     private PermissionRole role;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users;
 
-    protected Role(PermissionRole role) {
+    protected Role(){}
+
+    private Role(PermissionRole role) {
         this.role = role;
-    }
-
-    public static Role getAdminRole(){
-        return ADMIN;
-    }
-
-    public static Role getUserRole(){
-        return USER;
     }
 
     public PermissionRole getRole() {
         return role;
     }
 
+    public void setRole(PermissionRole role) {
+        this.role = role;
+    }
+
     public Collection<User> getUsers() {
         return users;
+    }
+
+    public void setUsers(Collection<User> users) {
+        this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + getId() +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

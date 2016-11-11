@@ -1,18 +1,16 @@
 package com.socobo.security.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.socobo.security.validation.validationAnnotation.Email;
 import com.socobo.security.validation.validationAnnotation.MatchingPasswords;
+import com.socobo.shared.persistence.PersistentObject;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 
 /**
@@ -21,20 +19,7 @@ import java.util.*;
 @Entity
 @Table(name="SOCOBO_USER")
 @MatchingPasswords(message = "{socobo.registration.user.password.mismatch}")
-public class User implements Serializable{
-
-    private static final long serialVersionUID = -8402474030984374222L;
-
-    @SequenceGenerator(
-            name = "user_seq_generator",
-            allocationSize = 1, initialValue = 1,
-            sequenceName = "user_id_seq")
-
-    @Column(name = "ID")
-    @Id @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_seq_generator")
-    private Long id;
+public class User extends PersistentObject implements Serializable{
 
     @NotNull(message = "{socobo.registration.user.username.required}")
     @NotEmpty(message = "{socobo.registration.user.username.required}")
@@ -47,6 +32,7 @@ public class User implements Serializable{
     @Column(name = "EMAIL", unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
     @NotNull(message = "{socobo.registration.user.password.required}")
     @NotEmpty(message = "{socobo.registration.user.password.required}")
     @Size(min = 8, message = "{socobo.registration.user.password.length}")
@@ -64,15 +50,18 @@ public class User implements Serializable{
     @Column(name = "STATUS", nullable = false)
     private Status status;
 
+    @JsonIgnore
     @Column(name = "CREATED", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
+    @JsonIgnore
     @Column(name = "UPDATED", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "USERS_ROLES",
                 joinColumns = @JoinColumn(name = "USER_ID"),
                 inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
@@ -87,14 +76,30 @@ public class User implements Serializable{
         this.status = status;
     }
 
+    public void activate(){
+        this.setStatus(Status.AKTIVE);
+    }
+
+    public void deactivate(){
+        this.setStatus(Status.AKTIVE);
+    }
+
+    public void lock(){
+        this.setStatus(Status.LOCKED);
+    }
+
+    public void markDeleted(){
+        this.setStatus(Status.DELETED);
+    }
+
     public void addRole(Role role){
-        this.roles = new HashSet<>();
         this.roles.add(role);
         Collection<User> users = role.getUsers();
         if(Objects.isNull(role.getUsers())){
             users = new ArrayList<>();
         }
         users.add(this);
+        role.setUsers(users);
     }
 
     public void deleteRole(Role role){
@@ -103,14 +108,6 @@ public class User implements Serializable{
         if(!Objects.isNull(role.getUsers())){
             users.remove(this);
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -129,24 +126,34 @@ public class User implements Serializable{
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return Collections.unmodifiableSet(this.roles);
-    }
-
+    @JsonProperty
     public Date getCreated() {
         return created;
     }
 
+    @JsonIgnore
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    @JsonProperty
     public Date getLastUpdated() {
         return lastUpdated;
+    }
+
+    @JsonIgnore
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     @JsonIgnore
@@ -182,12 +189,14 @@ public class User implements Serializable{
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", repeatedPassword='" + repeatedPassword + '\'' +
                 ", status=" + status +
+                ", created=" + created +
+                ", lastUpdated=" + lastUpdated +
+                ", roles=" + roles +
                 '}';
     }
 }

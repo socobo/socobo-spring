@@ -11,10 +11,7 @@ import static org.springframework.http.MediaType.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -39,7 +36,6 @@ public class AuthController {
         System.out.println(user);
         if(result.hasErrors())
             throw new RegistrationException(result.getAllErrors().toString());
-        System.out.print(user);
         User storedUser = registration.register(user);
         return new ResponseEntity<>(storedUser, OK);
     }

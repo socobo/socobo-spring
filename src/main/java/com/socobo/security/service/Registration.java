@@ -9,4 +9,6 @@ public interface Registration {
 
     User register(User user);
 
+    User getUser(String id);
+
 }
