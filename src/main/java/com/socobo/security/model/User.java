@@ -76,12 +76,20 @@ public class User extends PersistentObject implements Serializable{
         this.status = status;
     }
 
+    public boolean hasRole(Role role){
+        return roles.contains(role);
+    }
+
+    public Set<Role> listRoles(){
+        return Collections.unmodifiableSet(this.roles);
+    }
+
     public void activate(){
         this.setStatus(Status.AKTIVE);
     }
 
     public void deactivate(){
-        this.setStatus(Status.AKTIVE);
+        this.setStatus(Status.INAKTIV);
     }
 
     public void lock(){
@@ -108,6 +116,20 @@ public class User extends PersistentObject implements Serializable{
         if(!Objects.isNull(role.getUsers())){
             users.remove(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", repeatedPassword='" + repeatedPassword + '\'' +
+                ", status=" + status +
+                ", created=" + created +
+                ", lastUpdated=" + lastUpdated +
+                ", roles=" + roles +
+                '}';
     }
 
     public String getUsername() {
@@ -186,17 +208,4 @@ public class User extends PersistentObject implements Serializable{
         this.lastUpdated = new Date();
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", repeatedPassword='" + repeatedPassword + '\'' +
-                ", status=" + status +
-                ", created=" + created +
-                ", lastUpdated=" + lastUpdated +
-                ", roles=" + roles +
-                '}';
-    }
 }

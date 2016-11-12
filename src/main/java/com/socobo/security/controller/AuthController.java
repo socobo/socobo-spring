@@ -33,11 +33,10 @@ public class AuthController {
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> register(@RequestBody @Valid User user, BindingResult result) {
-        System.out.println(user);
         if(result.hasErrors())
             throw new RegistrationException(result.getAllErrors().toString());
         User storedUser = registration.register(user);
-        return new ResponseEntity<>(storedUser, OK);
+        return new ResponseEntity<>(storedUser, CREATED);
     }
 
 }

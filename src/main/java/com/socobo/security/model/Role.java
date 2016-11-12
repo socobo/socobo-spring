@@ -6,6 +6,8 @@ import com.socobo.shared.persistence.PersistentObject;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Created by patrick on 08.11.16.
@@ -34,6 +36,12 @@ public class Role extends PersistentObject{
 
     private Role(PermissionRole role) {
         this.role = role;
+    }
+
+    public boolean assignedTo(User user){
+        if(Objects.nonNull(this.users))
+            return this.users.contains(user);
+        return false;
     }
 
     public PermissionRole getRole() {

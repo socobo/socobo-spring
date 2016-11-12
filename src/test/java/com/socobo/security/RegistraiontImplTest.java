@@ -1,6 +1,7 @@
 package com.socobo.security;
 
 import com.socobo.security.exception.RegistrationException;
+import com.socobo.security.model.Role;
 import com.socobo.security.model.Status;
 import com.socobo.security.model.User;
 import com.socobo.security.repository.UserRepository;
@@ -10,7 +11,10 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,43 +39,40 @@ public class RegistraiontImplTest {
     public void register_nonExistingUser_saveIsCalled(){
 
         RegistrationImpl registration = getRegistration();
-        User testUser = getTestUser();
-        when(userRepository.findByUsernameOrEmail(testUser.getUsername(), testUser.getEmail())).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(testUser.getPassword())).thenReturn("XXXXX");
+        User userToRegister = TestHelper.getTestUser();
+        when(userRepository.findByUsernameOrEmail(userToRegister.getUsername(), userToRegister.getEmail())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(userToRegister.getPassword())).thenReturn("XXXXX");
 
-        User registeredUser = registration.register(testUser);
+        registration.register(userToRegister);
 
-        verify(userRepository).findByUsernameOrEmail("Joda", "joda@jedimail.com");
-        verify(passwordEncoder).encode("lightsaber");
-        User jodaWithEncryptedPw = getRegisteredUser();
-        verify(userRepository).save(argThat(new UserArgumentMatcher(jodaWithEncryptedPw)));
+        verify(userRepository).save(any(User.class));
+        userHasValidInitialState(userToRegister);
     }
 
     @Test
     public void register_existingUser_registrationException(){
 
         RegistrationImpl registration = getRegistration();
-        User testUser = getTestUser();
-        when(userRepository.findByUsernameOrEmail(testUser.getUsername(), testUser.getEmail())).thenReturn(Optional.of(testUser));
+        User userToRegister = TestHelper.getTestUser();
+        when(userRepository.findByUsernameOrEmail(userToRegister.getUsername(), userToRegister.getEmail())).thenReturn(Optional.of(userToRegister));
 
         thrown.expect(RegistrationException.class);
         thrown.expectMessage(equalTo("User for username: "
-                + testUser.getUsername()
+                + userToRegister.getUsername()
                 + " or email: "
-                + testUser.getEmail()
+                + userToRegister.getEmail()
                 + " already exists"));
 
-        registration.register(testUser);
+        registration.register(userToRegister);
 
     }
 
-    private User getTestUser() {
-        return new User("Joda","joda@jedimail.com","lightsaber", Status.AKTIVE);
+    private void userHasValidInitialState(User userToRegister) {
+        assertThat(userToRegister.getPassword(), equalTo("XXXXX"));
+        assertThat(userToRegister.getStatus(), equalTo(Status.INAKTIV));
+        assertTrue(userToRegister.hasRole(Role.USER));
     }
 
-    private User getRegisteredUser() {
-        return new User("Joda","joda@jedimail.com","XXXXX", Status.INAKTIV);
-    }
 
     private RegistrationImpl getRegistration() {
         return new RegistrationImpl(userRepository, passwordEncoder);
