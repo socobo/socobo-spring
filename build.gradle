@@ -34,7 +34,11 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.postgresql:postgresql:9.4.1211.jre7')
 
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.mockito:mockito-all:1.9.5')
+	testCompile('org.springframework.boot:spring-boot-starter-test'){
+		//exclude group: 'hamcrest-core'
+	}
+	testCompile('org.mockito:mockito-core:1.9.5') {
+        exclude group: 'org.hamcrest'
+    }
 
 }

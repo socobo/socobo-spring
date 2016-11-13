@@ -9,18 +9,14 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import static org.hamcrest.CoreMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by patrick on 12.11.16.
@@ -56,20 +52,13 @@ public class AuthControllerTest {
 
         when(registration.register(user)).thenReturn(user);
         when(bindingResult.hasErrors()).thenReturn(true);
-        when(bindingResult.getAllErrors()).thenReturn(getTestErrors());
 
         AuthController authController = new AuthController(registration);
 
         thrown.expect(RegistrationException.class);
-        thrown.expectMessage("Test Message");
 
         authController.register(user, bindingResult);
-    }
 
-    private List<ObjectError> getTestErrors() {
-        List<ObjectError> errors = new ArrayList<>();
-        errors.add(new ObjectError("TestError", "Test Message"));
-        return errors;
     }
 
 }
