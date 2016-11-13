@@ -27,7 +27,7 @@ public class RegistrationImpl implements Registration{
 
     @Override
     public User register(User user) {
-        verifyUserDoesNotExist(user);
+        failIfUserExists(user);
         setUserToInitialState(user);
         String encryptedPassword = encryptPassword(user.getPassword());
         user.setPassword(encryptedPassword);
@@ -43,7 +43,7 @@ public class RegistrationImpl implements Registration{
         return userRepository.findById(id);
     }
 
-    private void verifyUserDoesNotExist(User user) {
+    private void failIfUserExists(User user) throws RegistrationException{
         Optional<User> foundUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
         foundUser.ifPresent((u) -> {
             throw new RegistrationException("User for username: "
