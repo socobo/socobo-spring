@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/socobo/socobo-spring.svg?branch=master)](https://travis-ci.org/socobo/socobo-spring)
+
 # socobo-spring
 A socobo backend implementation using Spring Boot
 
