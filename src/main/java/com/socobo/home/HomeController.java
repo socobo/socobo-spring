@@ -18,7 +18,7 @@ public class HomeController {
     @RequestMapping("/")
     public String home() {
 
-        repo.save(new User("testuser", "testemail", "password", Status.AKTIVE));
+        repo.save(new User("testuser", "testemail", "password", Status.ACTIVE));
         return "Hello Socobo-Spring";
     }
 }

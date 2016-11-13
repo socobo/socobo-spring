@@ -69,7 +69,7 @@ public class RegistraiontImplTest {
 
     private void userHasValidInitialState(User userToRegister) {
         assertThat(userToRegister.getPassword(), equalTo("XXXXX"));
-        assertThat(userToRegister.getStatus(), equalTo(Status.INAKTIV));
+        assertThat(userToRegister.getStatus(), equalTo(Status.INACTIVE));
         assertTrue(userToRegister.hasRole(Role.USER));
     }
 

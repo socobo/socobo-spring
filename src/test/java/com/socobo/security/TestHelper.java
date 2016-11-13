@@ -9,7 +9,7 @@ import com.socobo.security.model.User;
 public class TestHelper {
 
     static User getTestUser() {
-        return new User("Joda","joda@jedimail.com","lightsaber", Status.AKTIVE);
+        return new User("Joda","joda@jedimail.com","lightsaber", Status.ACTIVE);
     }
 
 

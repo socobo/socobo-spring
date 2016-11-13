@@ -85,11 +85,11 @@ public class User extends PersistentObject implements Serializable{
     }
 
     public void activate(){
-        this.setStatus(Status.AKTIVE);
+        this.setStatus(Status.ACTIVE);
     }
 
     public void deactivate(){
-        this.setStatus(Status.INAKTIV);
+        this.setStatus(Status.INACTIVE);
     }
 
     public void lock(){
