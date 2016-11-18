@@ -18,31 +18,31 @@ import java.util.*;
  */
 @Entity
 @Table(name="SOCOBO_USER")
-@MatchingPasswords(message = "{socobo.registration.user.password.mismatch}")
+@MatchingPasswords(message = "{register.password.mismatch}")
 public class User extends PersistentObject implements Serializable{
 
-    @NotNull(message = "{socobo.registration.user.username.required}")
-    @NotEmpty(message = "{socobo.registration.user.username.required}")
+    @NotNull(message = "{register.username.required}")
+    @NotEmpty(message = "{register.username.required}")
     @Column(name = "USERNAME", unique = true, nullable = false)
     private String username;
 
-    @NotNull(message = "{socobo.registration.user.email.required}")
-    @NotEmpty(message = "{socobo.registration.user.email.required}")
-    @Email(message = "{socobo.registration.user.email.format}")
+    @NotNull(message = "{register.email.required}")
+    @NotEmpty(message = "{register.email.required}")
+    @Email(message = "{register.email.format}")
     @Column(name = "EMAIL", unique = true, nullable = false)
     private String email;
 
     @JsonIgnore
-    @NotNull(message = "{socobo.registration.user.password.required}")
-    @NotEmpty(message = "{socobo.registration.user.password.required}")
-    @Size(min = 8, message = "{socobo.registration.user.password.length}")
+    @NotNull(message = "{register.password.required}")
+    @NotEmpty(message = "{register.password.required}")
+    @Size(min = 8, message = "{register.password.length}")
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
     @Transient
     @JsonIgnore
-    @NotNull(message = "{socobo.registration.user.password.confirmation}")
-    @NotEmpty(message = "{socobo.registration.user.password.confirmation}")
+    @NotNull(message = "{register.password.confirmation}")
+    @NotEmpty(message = "{register.password.confirmation}")
     private String repeatedPassword;
 
     @JsonIgnore
@@ -125,7 +125,7 @@ public class User extends PersistentObject implements Serializable{
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", repeatedPassword='" + repeatedPassword + '\'' +
-                ", status=" + status +
+                ", statusPhrase=" + status +
                 ", created=" + created +
                 ", lastUpdated=" + lastUpdated +
                 ", roles=" + roles +

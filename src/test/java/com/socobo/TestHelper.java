@@ -1,4 +1,4 @@
-package com.socobo.security;
+package com.socobo;
 
 import com.socobo.security.model.Status;
 import com.socobo.security.model.User;
@@ -8,7 +8,7 @@ import com.socobo.security.model.User;
  */
 public class TestHelper {
 
-    static User getTestUser() {
+    public static User getTestUser() {
         return new User("Joda","joda@jedimail.com","lightsaber", Status.ACTIVE);
     }
 

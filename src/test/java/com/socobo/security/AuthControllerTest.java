@@ -1,7 +1,6 @@
 package com.socobo.security;
 
 import com.socobo.security.controller.AuthController;
-import com.socobo.security.exception.RegistrationException;
 import com.socobo.security.model.User;
 import com.socobo.security.service.Registration;
 import org.junit.Rule;
@@ -38,27 +37,12 @@ public class AuthControllerTest {
     public void register_noErrors_sendsNormalResponse(){
 
         when(registration.register(user)).thenReturn(user);
-        when(bindingResult.hasErrors()).thenReturn(false);
 
         AuthController authController = new AuthController(registration);
 
-        ResponseEntity<User> response = authController.register(user, bindingResult);
+        ResponseEntity<User> response = authController.register(user);
 
         assertThat(new ResponseEntity<User>(user, HttpStatus.CREATED), equalTo(response));
-    }
-
-    @Test
-    public void register_hasErrors_throwsRegistrationException(){
-
-        when(registration.register(user)).thenReturn(user);
-        when(bindingResult.hasErrors()).thenReturn(true);
-
-        AuthController authController = new AuthController(registration);
-
-        thrown.expect(RegistrationException.class);
-
-        authController.register(user, bindingResult);
-
     }
 
 }

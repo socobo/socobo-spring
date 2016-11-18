@@ -1,5 +1,6 @@
 package com.socobo.security;
 
+import com.socobo.TestHelper;
 import com.socobo.security.model.Role;
 import com.socobo.security.model.User;
 import org.junit.Test;

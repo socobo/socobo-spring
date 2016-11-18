@@ -1,6 +1,5 @@
 package com.socobo.security.controller;
 
-import com.socobo.security.exception.RegistrationException;
 import com.socobo.security.model.User;
 import com.socobo.security.service.Registration;
 
@@ -10,7 +9,6 @@ import static org.springframework.http.MediaType.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,12 +29,10 @@ public class AuthController {
         this.registration = registration;
     }
 
-    @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public ResponseEntity<User> register(@RequestBody @Valid User user, BindingResult result) {
-        if(result.hasErrors())
-            throw new RegistrationException(result.getAllErrors().toString());
-        User storedUser = registration.register(user);
-        return new ResponseEntity<>(storedUser, CREATED);
+    @PostMapping(path = "/register")
+    public ResponseEntity<User> register(@RequestBody @Valid User user) {
+        User registeredUser = registration.register(user);
+        return new ResponseEntity<>(registeredUser, CREATED);
     }
 
 }

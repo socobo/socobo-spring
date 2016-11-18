@@ -1,14 +1,17 @@
 package com.socobo.security.service;
 
-import com.socobo.security.exception.RegistrationException;
 import com.socobo.security.model.Role;
 import com.socobo.security.model.User;
 import com.socobo.security.repository.UserRepository;
+import com.socobo.shared.exception.model.ApiException;
+import com.socobo.shared.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static com.socobo.shared.message.MessageKey.REGISTER_USER_EXISTS;
 
 /**
  * Created by patrick on 05.11.16.
@@ -20,7 +23,9 @@ public class RegistrationImpl implements Registration{
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public RegistrationImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public RegistrationImpl(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -43,14 +48,10 @@ public class RegistrationImpl implements Registration{
         return userRepository.findById(id);
     }
 
-    private void failIfUserExists(User user) throws RegistrationException{
+    private void failIfUserExists(User user) throws ApiException{
         Optional<User> foundUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
         foundUser.ifPresent((u) -> {
-            throw new RegistrationException("User for username: "
-                    + user.getUsername()
-                    + " or email: "
-                    + user.getEmail()
-                    + " already exists");
+            throw new ApiException(new Message(REGISTER_USER_EXISTS));
         });
     }
 
