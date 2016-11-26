@@ -1,0 +1,49 @@
+// frontend build.gradle - inspired by https://github.com/borysn/spring-boot-angular2
+
+// plugin docu: https://github.com/srs/gradle-node-plugin
+plugins {
+    id "com.moowork.node" version "0.13"
+}
+
+// configure gradle-node-plugin w/ download
+node {
+    version = "7.0.0"
+    npmVersion = "3.10.8"
+    download = true
+    workDir = file("${project.projectDir}/node")
+    nodeModulesDir = file("${project.projectDir}/")
+}
+
+// configure gradle-node-plugin w/o download
+//node {
+//    version = "7.0.0"
+//    npmVersion = "3.10.8"
+//    download = false
+//    nodeModulesDir = file("${project.projectDir}/")
+//}
+
+// clean task
+task npmClean(type: Delete) {
+    final def frontendDir = "${rootDir}/frontend"
+    delete "${frontendDir}/dist"
+    delete "${frontendDir}/node"
+    delete "${frontendDir}/node_modules"
+    delete "${frontendDir}/typings"
+}
+
+// after :backend:clean
+// run clean task from npm
+task clean {}
+clean.dependsOn(npmClean)
+
+// after :backend:check
+// run test task from npm
+//task check {}
+//check.dependsOn(npm_test)
+
+// after :backend:build
+// run install and start task from npm
+task build {}
+build.dependsOn(npm_install)
+build.dependsOn(npm_run_start)
+

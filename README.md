@@ -7,20 +7,51 @@ A socobo backend implementation using Spring Boot
 ## Execute the application 
 ### Provide a database
 Start a Postgres database:
-`docker run --name socobo-postgres -e POSTGRES_PASSWORD=socobo -d -p 5432:5432 postgres`
+```bash
+docker run --name socobo-postgres -e POSTGRES_PASSWORD=socobo -d -p 5432:5432 postgres
+```
 (Or set up your own local postgres instance with the settings located in the applicaiton.properties file)
 
 Connect via psql (or any other tool):
-`docker run -it --rm --link socobo-postgres:postgres postgres psql -h postgres -U postgres`
+```bash
+docker run -it --rm --link socobo-postgres:postgres postgres psql -h postgres -U postgres
+```
 
 Add the database:
-`create database socobo`
-`\connect socobo`
+```bash
+create database socobo
+\connect socobo
+```
 
-### Run the app
+### Run the *frontend* and *backend* (w/o watch file changes)
 Just enter the following command on your console:
+```bash
+./gradlew clean build bootRun
+```
 
-`./gradlew bootRun`
+_backend available under localhost:8181_
+_frontend available under localhost:3000_
+
+### Run the *backend* only (w/o watch file changes)
+```bash
+./gradlew backend:clean backend:build backend:bootRun
+```
+
+_backend available under localhost:8181_
+
+### Run the *frontend* only (w/o watch file changes)
+```bash
+./gradlew frontend:npmClean frontend:npm_install frontend:npm_run_start
+```
+
+_frontend available under localhost:3000_
+
+### Run the *frontend* only (w/ watch file changes)
+```bash
+./gradlew frontend:npmClean frontend:npm_install frontend:npm_run_start-w
+```
+
+_frontend available under localhost:3000_
 
 ## Api
 
@@ -33,11 +64,11 @@ password: socobo
 **Register user**
 
 POST /register
-```javascript
+```json
 {
-"username":"username",
-"email":"email",
-"password":"password",
-"repeatedPassword":"password confirmation"
+    "username":"username",
+    "email":"email",
+    "password":"password",
+    "repeatedPassword":"password confirmation"
 }
 ```
